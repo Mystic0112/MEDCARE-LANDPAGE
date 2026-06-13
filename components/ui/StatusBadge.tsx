@@ -1,8 +1,9 @@
 import { STATUS_META, type StatusKey } from "@/lib/constants";
 
 /**
- * Badge de status de agendamento (aguardando · confirmado · concluída · cancelado).
- * As cores vêm de STATUS_META para refletirem exatamente o sistema.
+ * Badge de status — monocromático com um único ponto de cor (o dot).
+ * O texto é neutro/hairline; a cor do status aparece só no ponto de luz,
+ * reforçando a transição sutil aguardando → confirmado.
  */
 export function StatusBadge({
   status,
@@ -13,10 +14,10 @@ export function StatusBadge({
   return (
     <span
       className={[
-        "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold",
+        "inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-transparent px-3 py-1",
+        "font-mono text-[11px] uppercase tracking-wider text-foreground/70",
         className,
       ].join(" ")}
-      style={{ backgroundColor: meta.bg, color: meta.text }}
       {...rest}
     >
       <span

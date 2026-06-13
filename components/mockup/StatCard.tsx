@@ -2,10 +2,11 @@ import { Icon } from "@/components/ui/Icon";
 
 type Accent = "primary" | "teal" | "purple";
 
-const ACCENT: Record<Accent, { bg: string; chip: string; color: string }> = {
-  primary: { bg: "bg-primary-soft", chip: "bg-primary/15", color: "#4578FF" },
-  teal: { bg: "bg-teal-soft", chip: "bg-teal/15", color: "#00C2C7" },
-  purple: { bg: "bg-purple-soft", chip: "bg-purple/15", color: "#A033FF" },
+/** Acento focal por card — usado SÓ na hairline superior e no valor de tendência. */
+const ACCENT: Record<Accent, string> = {
+  primary: "#4578FF",
+  teal: "#00C2C7",
+  purple: "#A033FF",
 };
 
 interface StatCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -17,8 +18,9 @@ interface StatCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * Stat Card do Dashboard. `...rest` é repassado para que a Hero possa
- * anexar hooks de animação (ex.: data-assembly="stat").
+ * Stat Card do Dashboard — monocromático. Sem fundo colorido: hairline 1px,
+ * número grande em mono, e a cor da marca aparece só como ponto de luz (a
+ * linha fina no topo + a tendência). `...rest` repassa hooks de animação.
  */
 export function StatCard({
   title,
@@ -29,42 +31,49 @@ export function StatCard({
   className = "",
   ...rest
 }: StatCardProps) {
-  const a = ACCENT[accent];
+  const color = ACCENT[accent];
   const display =
     typeof value === "number" ? value.toLocaleString("pt-BR") : value;
 
   return (
     <div
       className={[
-        "relative overflow-hidden rounded-[28px] p-4 sm:p-5",
-        a.bg,
-        "ring-1 ring-black/[0.03]",
+        "relative overflow-hidden rounded-2xl border border-foreground/10 bg-transparent p-4 sm:p-5",
         className,
       ].join(" ")}
       {...rest}
     >
-      {/* Ícone decorativo de fundo (opacidade ~12%) */}
-      <Icon
-        name={icon}
-        className="pointer-events-none absolute -bottom-4 -right-3 h-24 w-24"
-        style={{ color: a.color, opacity: 0.12 }}
+      {/* Linha fina de acento no topo — ponto de luz */}
+      <span
+        className="absolute inset-x-0 top-0 h-px"
+        style={{ backgroundColor: color }}
       />
 
-      <div className="relative flex items-center gap-2">
-        <span
-          className={["grid h-8 w-8 place-items-center rounded-xl", a.chip].join(
-            " ",
-          )}
-        >
-          <Icon name={icon} className="h-4 w-4" style={{ color: a.color }} />
-        </span>
-        <p className="text-xs font-semibold text-slate-600">{title}</p>
+      {/* Marca d'água sutil do ícone */}
+      <Icon
+        name={icon}
+        className="pointer-events-none absolute -bottom-3 -right-2 h-20 w-20 text-foreground"
+        style={{ opacity: 0.04 }}
+      />
+
+      <div className="relative flex items-center justify-between">
+        <p className="font-mono text-[10px] uppercase tracking-wider text-foreground/50">
+          {title}
+        </p>
+        <Icon name={icon} className="h-4 w-4 text-foreground/70" />
       </div>
 
-      <p className="relative mt-3 text-[34px] font-extrabold leading-none tracking-tight text-ink">
+      <p className="relative mt-4 font-mono text-[34px] font-bold leading-none tracking-tight text-foreground">
         {display}
       </p>
-      {sub && <p className="relative mt-1.5 text-xs text-slate-500">{sub}</p>}
+      {sub && (
+        <p
+          className="relative mt-2 font-mono text-[11px] tracking-wide"
+          style={{ color }}
+        >
+          {sub}
+        </p>
+      )}
     </div>
   );
 }

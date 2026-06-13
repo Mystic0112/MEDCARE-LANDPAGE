@@ -30,10 +30,10 @@ const VALIDATION_ROWS: string[] = [
 ];
 
 /**
- * Seção "Agendamento Inteligente": à esquerda, headline + pontos de
- * validação; à direita, um mockup do modal "Novo Agendamento" cujo
- * painel de validação acende e cuja badge faz morph de
- * `aguardando` (âmbar) → `confirmado` (teal) ao entrar em viewport.
+ * Seção "Agendamento Inteligente" [02]: headline editorial + pontos de
+ * validação à esquerda; à direita, um mockup do modal "Novo Agendamento" cujo
+ * painel de validação acende (teal — ponto de luz) e cuja badge faz morph de
+ * `aguardando` → `confirmado` ao entrar em viewport. Superfícies em hairline.
  */
 export function SchedulingFlow() {
   const root = useRef<HTMLElement>(null);
@@ -54,7 +54,7 @@ export function SchedulingFlow() {
 
         // 1) As duas linhas de validação dão check, uma após a outra.
         tl.to(".validation-row", {
-          backgroundColor: COLORS.tealSoft,
+          backgroundColor: "rgba(0, 194, 199, 0.14)",
           duration: 0.4,
           stagger: 0.25,
         })
@@ -134,28 +134,28 @@ export function SchedulingFlow() {
   const teal = STATUS_META.confirmado.dot;
 
   return (
-    <section
-      id="agendamento"
-      ref={root}
-      className="bg-canvas py-24 sm:py-32"
-    >
+    <section id="agendamento" ref={root} className="py-28 sm:py-40">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
-        <div className="grid items-center gap-12 lg:grid-cols-2">
+        <div className="grid items-center gap-14 lg:grid-cols-2">
           {/* LEFT — headline + pontos de validação */}
           <div className="reveal-col">
             <SectionHeading
-              align="left"
+              index="02"
               kicker="Agendamento Inteligente"
               kickerIcon="CalendarCheck"
-              title="O sistema sabe quem atende — e quando."
+              title={
+                <>
+                  O sistema <span className="text-primary">sabe</span> quando
+                </>
+              }
               subtitle="Validação automática de dia e horário em cada agendamento: o sistema confere a agenda do profissional e o expediente da clínica antes de você salvar."
             />
 
-            <ul className="mt-8 flex flex-col gap-4">
+            <ul className="mt-10 flex flex-col gap-4">
               {VALIDATION_POINTS.map((point) => (
                 <li key={point} className="flex items-start gap-3">
                   <span
-                    className="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-full bg-teal-soft"
+                    className="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-full bg-teal/15"
                     aria-hidden
                   >
                     <Icon
@@ -164,7 +164,7 @@ export function SchedulingFlow() {
                       style={{ color: teal }}
                     />
                   </span>
-                  <span className="text-base leading-relaxed text-slate-600">
+                  <span className="text-base leading-relaxed text-foreground/70">
                     {point}
                   </span>
                 </li>
@@ -174,10 +174,10 @@ export function SchedulingFlow() {
 
           {/* RIGHT — mockup do modal "Novo Agendamento" */}
           <div className="reveal-col">
-            <div className="mock-card ds-card p-6">
+            <div className="mock-card border border-foreground/10 bg-transparent p-6">
               {/* Cabeçalho do modal */}
               <div className="flex items-center gap-3">
-                <span className="grid h-10 w-10 place-items-center rounded-2xl bg-primary-soft">
+                <span className="grid h-10 w-10 place-items-center rounded-xl border border-foreground/10">
                   <Icon
                     name="CalendarPlus"
                     className="h-5 w-5"
@@ -185,10 +185,10 @@ export function SchedulingFlow() {
                   />
                 </span>
                 <div>
-                  <h3 className="text-base font-bold text-ink">
+                  <h3 className="text-base font-bold text-foreground">
                     Novo Agendamento
                   </h3>
-                  <p className="text-xs text-slate-400">
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-foreground/40">
                     Preencha os dados da consulta
                   </p>
                 </div>
@@ -198,15 +198,15 @@ export function SchedulingFlow() {
               <div className="mt-6 flex flex-col gap-3">
                 {FORM_FIELDS.map((field) => (
                   <div key={field.label} className="flex flex-col gap-1.5">
-                    <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-foreground/40">
                       {field.label}
                     </span>
-                    <div className="flex items-center gap-2.5 rounded-2xl bg-canvas px-3.5 py-2.5 ring-1 ring-slate-200/70">
+                    <div className="flex items-center gap-2.5 rounded-xl border border-foreground/10 px-3.5 py-2.5">
                       <Icon
                         name={field.icon}
-                        className="h-4 w-4 flex-none text-muted"
+                        className="h-4 w-4 flex-none text-foreground/50"
                       />
-                      <span className="text-sm font-medium text-ink">
+                      <span className="text-sm font-medium text-foreground">
                         {field.value}
                       </span>
                     </div>
@@ -219,7 +219,7 @@ export function SchedulingFlow() {
                 {VALIDATION_ROWS.map((row) => (
                   <div
                     key={row}
-                    className="validation-row flex items-center gap-2.5 rounded-2xl bg-canvas px-3.5 py-2.5 ring-1 ring-slate-200/60"
+                    className="validation-row flex items-center gap-2.5 rounded-xl border border-foreground/10 px-3.5 py-2.5"
                   >
                     <span
                       className="check-mark grid h-5 w-5 flex-none place-items-center rounded-full"
@@ -228,18 +228,19 @@ export function SchedulingFlow() {
                     >
                       <Icon name="Check" className="h-3 w-3 text-white" />
                     </span>
-                    <span className="text-sm font-medium text-ink">{row}</span>
+                    <span className="text-sm font-medium text-foreground">
+                      {row}
+                    </span>
                   </div>
                 ))}
               </div>
 
               {/* Área de status — duas badges empilhadas que fazem crossfade */}
-              <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-5">
-                <span className="text-sm font-semibold text-slate-500">
+              <div className="mt-6 flex items-center justify-between border-t border-foreground/10 pt-5">
+                <span className="font-mono text-[11px] uppercase tracking-wider text-foreground/50">
                   Status
                 </span>
                 <span className="relative inline-grid">
-                  {/* Ambas ocupam a mesma célula do grid para o morph in-place */}
                   <span className="badge-aguardando col-start-1 row-start-1">
                     <StatusBadge status="aguardando" />
                   </span>

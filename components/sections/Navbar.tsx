@@ -13,22 +13,22 @@ const NAV_LINKS: { href: string; label: string }[] = [
 ];
 
 /**
- * Barra superior fixa da landing page.
+ * Barra superior fixa — monocromática.
  *
- * - Fundo transparente no topo; ganha vidro fosco + sombra + hairline após ~40px de scroll
- *   (listener de scroll passivo com cleanup, sem GSAP).
- * - Toggle de tema que alterna a classe `dark` no <html>.
- * - Menu mobile (hamburger) com painel dropdown que fecha ao clicar num link.
+ * - Transparente no topo; ganha vidro fosco + hairline após ~40px de scroll.
+ * - Toggle de tema (alterna `.dark` no <html>, persiste em localStorage).
+ * - Menu mobile (hamburger) com dropdown que fecha ao clicar num link.
+ * - Links em monoespaçada uppercase (assinatura editorial).
  */
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Background ciente do scroll — listener passivo, removido na limpeza (sem leak).
+  // Background ciente do scroll — listener passivo, removido na limpeza.
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
-    onScroll(); // estado inicial correto após hidratação / reload em meio à página
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -41,6 +41,11 @@ export function Navbar() {
   const toggleTheme = () => {
     const next = document.documentElement.classList.toggle("dark");
     setIsDark(next);
+    try {
+      localStorage.setItem("theme", next ? "dark" : "light");
+    } catch {
+      /* localStorage indisponível (modo privado) — ignora */
+    }
   };
 
   return (
@@ -48,7 +53,7 @@ export function Navbar() {
       className={[
         "fixed inset-x-0 top-0 z-50 transition-all duration-300",
         scrolled
-          ? "border-b border-slate-200/60 bg-white/80 shadow-soft backdrop-blur dark:border-white/10 dark:bg-slate-900/80"
+          ? "border-b border-foreground/10 bg-background/80 backdrop-blur"
           : "border-b border-transparent bg-transparent",
       ].join(" ")}
     >
@@ -56,18 +61,17 @@ export function Navbar() {
         aria-label="Principal"
         className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:h-20 sm:px-8"
       >
-        {/* Esquerda: logo chip + wordmark + tag CESBEN */}
-        <a href="#inicio" className="flex items-center gap-2.5" aria-label="MedCare — início">
-          <span className="grid h-9 w-9 place-items-center rounded-2xl bg-primary text-white shadow-glow">
+        {/* Esquerda: logo chip + wordmark */}
+        <a
+          href="#inicio"
+          className="flex items-center gap-2.5"
+          aria-label="MedCare — início"
+        >
+          <span className="grid h-9 w-9 place-items-center rounded-lg bg-foreground text-background">
             <Icon name="HeartPulse" className="h-5 w-5" />
           </span>
-          <span className="flex items-baseline gap-1.5">
-            <span className="text-lg font-extrabold tracking-tight text-ink dark:text-white">
-              MedCare
-            </span>
-            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">
-              CESBEN
-            </span>
+          <span className="text-lg font-bold tracking-tight text-foreground">
+            MedCare
           </span>
         </a>
 
@@ -77,7 +81,7 @@ export function Navbar() {
             <a
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-slate-600 transition-colors hover:text-primary dark:text-slate-300 dark:hover:text-primary"
+              className="font-mono text-[11px] font-medium uppercase tracking-wider text-foreground/60 transition-colors hover:text-foreground"
             >
               {link.label}
             </a>
@@ -91,7 +95,7 @@ export function Navbar() {
             onClick={toggleTheme}
             aria-label={isDark ? "Ativar tema claro" : "Ativar tema escuro"}
             aria-pressed={isDark}
-            className="grid h-10 w-10 place-items-center rounded-full text-slate-600 ring-1 ring-slate-200/60 transition-colors hover:bg-slate-100 hover:text-primary dark:text-slate-300 dark:ring-white/10 dark:hover:bg-white/5"
+            className="grid h-10 w-10 place-items-center rounded-full border border-foreground/15 text-foreground/70 transition-colors hover:border-foreground/40 hover:text-foreground"
           >
             <Icon name={isDark ? "Sun" : "Moon"} className="h-5 w-5" />
           </button>
@@ -106,7 +110,7 @@ export function Navbar() {
             onClick={() => setMenuOpen((open) => !open)}
             aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
             aria-expanded={menuOpen}
-            className="grid h-10 w-10 place-items-center rounded-full text-slate-600 ring-1 ring-slate-200/60 transition-colors hover:bg-slate-100 hover:text-primary md:hidden dark:text-slate-300 dark:ring-white/10 dark:hover:bg-white/5"
+            className="grid h-10 w-10 place-items-center rounded-full border border-foreground/15 text-foreground/70 transition-colors hover:text-foreground md:hidden"
           >
             <Icon name={menuOpen ? "X" : "Menu"} className="h-5 w-5" />
           </button>
@@ -116,7 +120,7 @@ export function Navbar() {
       {/* Painel dropdown mobile — fecha ao clicar num link */}
       <div
         className={[
-          "overflow-hidden border-t border-slate-200/60 bg-white/95 backdrop-blur transition-[max-height,opacity] duration-300 md:hidden dark:border-white/10 dark:bg-slate-900/95",
+          "overflow-hidden border-t border-foreground/10 bg-background/95 backdrop-blur transition-[max-height,opacity] duration-300 md:hidden",
           menuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
         ].join(" ")}
       >
@@ -126,7 +130,7 @@ export function Navbar() {
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className="rounded-2xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors hover:bg-primary-soft hover:text-primary dark:text-slate-200 dark:hover:bg-white/5"
+              className="rounded-lg px-4 py-3 font-mono text-xs uppercase tracking-wider text-foreground/70 transition-colors hover:bg-foreground/5 hover:text-foreground"
             >
               {link.label}
             </a>

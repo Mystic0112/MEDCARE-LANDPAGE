@@ -7,8 +7,8 @@ interface AppSidebarProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 /**
- * Sidebar vertical de 90px do sistema MedCare.
- * Logo HeartPulse no topo, ícones de navegação, toggle de tema na base.
+ * Sidebar vertical de 90px do sistema MedCare — versão monocromática.
+ * Item ativo = bloco invertido (foreground/background). Logo idem.
  * Reutilizada na Hero (montagem) e na seção RBAC (visibilidade por papel).
  */
 export function AppSidebar({
@@ -19,15 +19,15 @@ export function AppSidebar({
   return (
     <aside
       className={[
-        "flex h-full w-[72px] flex-col items-center justify-between rounded-[26px]",
-        "bg-white py-4 ring-1 ring-slate-200/70 sm:w-[90px]",
+        "flex h-full w-[72px] flex-col items-center justify-between rounded-2xl",
+        "border border-foreground/10 bg-transparent py-4 sm:w-[90px]",
         className,
       ].join(" ")}
       {...rest}
     >
       <div className="flex flex-col items-center gap-1.5">
         {/* Logo */}
-        <div className="mb-3 grid h-10 w-10 place-items-center rounded-2xl bg-primary text-white shadow-glow">
+        <div className="mb-3 grid h-10 w-10 place-items-center rounded-xl bg-foreground text-background">
           <Icon name="HeartPulse" className="h-5 w-5" />
         </div>
 
@@ -41,10 +41,10 @@ export function AppSidebar({
               aria-label={item.label}
               tabIndex={-1}
               className={[
-                "grid h-11 w-11 place-items-center rounded-2xl transition-colors duration-300",
+                "grid h-11 w-11 place-items-center rounded-xl transition-colors duration-300",
                 active
-                  ? "bg-primary text-white shadow-glow"
-                  : "text-slate-400 hover:bg-slate-100 hover:text-slate-600",
+                  ? "bg-foreground text-background"
+                  : "text-foreground/35 hover:bg-foreground/5 hover:text-foreground/70",
               ].join(" ")}
             >
               <Icon name={item.icon} className="h-[18px] w-[18px]" />
@@ -54,7 +54,7 @@ export function AppSidebar({
       </div>
 
       {/* Toggle de tema (decorativo no mockup) */}
-      <div className="grid h-11 w-11 place-items-center rounded-2xl text-slate-400">
+      <div className="grid h-11 w-11 place-items-center rounded-xl text-foreground/35">
         <Icon name="MoonStar" className="h-[18px] w-[18px]" />
       </div>
     </aside>
