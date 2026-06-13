@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+@layer base {
+  * {
+    @apply border-slate-200/60;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-canvas text-ink font-sans antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: rgba(69, 120, 255, 0.18);
+  }
+
+  /* Acessibilidade: respeita usuários que pediram menos movimento.
+     O GSAP também trata isso via matchMedia, mas garantimos no CSS. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@layer components {
+  /* Cartão base do design system: cantos 36px, sombra ultraleve, borda invisível */
+  .ds-card {
+    @apply rounded-card bg-card shadow-soft ring-1 ring-slate-200/60;
+  }
+
+  /* Botão pill primário */
+  .ds-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3
+      text-sm font-semibold text-white shadow-glow transition-all duration-300
+      hover:scale-[1.02] hover:shadow-float active:scale-[0.99];
+  }
+
+  /* Botão pill secundário (ghost) */
+  .ds-btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3
+      text-sm font-semibold text-ink ring-1 ring-slate-200 transition-all duration-300
+      hover:scale-[1.02] hover:bg-slate-50;
+  }
+
+  /* Pill de período / tab (Semanal · Mensal · Anual) */
+  .ds-pill {
+    @apply inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold
+      transition-colors duration-200;
+  }
+
+  /* Eyebrow / kicker das seções */
+  .ds-kicker {
+    @apply inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-[11px]
+      font-bold uppercase tracking-[0.18em] text-muted ring-1 ring-slate-200/70 backdrop-blur;
+  }
+}
+
+@layer utilities {
+  /* Gradiente de texto da headline */
+  .text-gradient {
+    @apply bg-gradient-to-br from-ink via-ink to-primary bg-clip-text text-transparent;
+  }
+
+  /* Esconde scrollbar mantendo o scroll funcional (mockups internos) */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Fundo de grade sutil (estilo Linear) */
+  .bg-grid {
+    background-image: linear-gradient(
+        to right,
+        rgba(15, 23, 42, 0.035) 1px,
+        transparent 1px
+      ),
+      linear-gradient(to bottom, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+
+  .bg-grid-fade {
+    -webkit-mask-image: radial-gradient(
+      ellipse 70% 60% at 50% 0%,
+      #000 60%,
+      transparent 100%
+    );
+    mask-image: radial-gradient(
+      ellipse 70% 60% at 50% 0%,
+      #000 60%,
+      transparent 100%
+    );
+  }
+}

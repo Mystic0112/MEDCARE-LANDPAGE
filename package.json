@@ -1,0 +1,30 @@
+{
+  "name": "medcare-landing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Landing page comercial do MedCare — Sistema de Gestão Clínica Inteligente (CESBEN)",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@gsap/react": "2.1.1",
+    "gsap": "3.12.5",
+    "lucide-react": "0.451.0",
+    "next": "14.2.35",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.7.4",
+    "@types/react": "18.3.11",
+    "@types/react-dom": "18.3.0",
+    "autoprefixer": "10.4.20",
+    "postcss": "8.4.47",
+    "tailwindcss": "3.4.13",
+    "typescript": "5.6.2"
+  }
+}

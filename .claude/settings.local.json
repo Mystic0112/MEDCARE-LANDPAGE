@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la)",
+      "Bash(node --version)",
+      "Bash(npm --version)",
+      "Bash(npm view *)",
+      "Bash(node -e \"const {icons}=require\\('lucide-react'\\); const names=['HeartPulse','CalendarPlus','CalendarCheck','UserCog','MoonStar','Stethoscope','Fingerprint','Archive','KeyRound','Pill','Sparkles','ShieldCheck','ClipboardList','LayoutDashboard','Users','UserCheck','CalendarDays','Bell','Search','Sun','Moon','Menu','X','ArrowRight','Check','Lock','Clock','User']; names.forEach\\(n=>{ if\\(!icons[n]\\) console.log\\('MISSING:',n\\); else console.log\\('ok',n\\);}\\);\")",
+      "Bash(npm install *)",
+      "Bash(cd \"C:/Users/c9hes/Documents/landpage MEDCARE/node_modules/lucide-react/dist/esm\" && ls icons/ | grep -iE \"index|^icons\" | head; echo \"=== icons/index ===\"; head -5 icons/index.js 2>/dev/null; echo \"=== grep MoonStar export in dts ===\"; grep -c \"MoonStar\" ../lucide-react.d.ts)",
+      "Bash(npx tsc *)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(echo \"tsc exit: $?\")",
+      "Bash(npx next *)"
+    ]
+  }
+}
