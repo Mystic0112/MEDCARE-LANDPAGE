@@ -3,28 +3,73 @@
 @tailwind utilities;
 
 :root {
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+  /* ---- Tokens monocromáticos (modo claro) — canais RGB p/ alpha do Tailwind ----
+     Direção de arte: branco puro + quase-preto, alto contraste editorial.
+     As cores da marca entram apenas como pontos de luz focais. */
+  --canvas: 243 244 246; /* cinza clarinho (gray-100) · background — sem o estouro do branco */
+  --card: 250 251 252; /* superfície levemente acima do canvas */
+  --surface: 233 235 238; /* inset sutil */
+  --border: 220 223 229; /* hairline (gray-200) */
+  --ink: 9 9 11; /* quase preto · texto principal (alto contraste) */
+  --muted: 107 114 128; /* gray-500 · texto secundário */
+  --faint: 156 163 175; /* gray-400 · texto terciário / legendas */
+  --grid-line: 9 9 11; /* linhas da grade cirúrgica */
+}
+
+/* ---- Modo escuro: preto absoluto / alto contraste cinematográfico ---- */
+.dark {
+  --canvas: 0 0 0; /* preto absoluto */
+  --card: 10 10 10; /* superfície quase-preta */
+  --surface: 24 24 27; /* zinc-900 */
+  --border: 38 38 42; /* zinc-800 · hairline */
+  --ink: 250 250 250; /* quase branco */
+  --muted: 161 161 170; /* zinc-400 */
+  --faint: 113 113 122; /* zinc-500 */
+  --grid-line: 250 250 250;
+}
+
+/* ---- Inversão de contexto (mockups do produto) ----
+   .invert-theme aplica o tema OPOSTO ao do contexto: numa página clara o
+   bloco fica preto; numa página preta, branco. Alto contraste de grife. */
+.invert-theme {
+  --canvas: 0 0 0;
+  --card: 10 10 10;
+  --surface: 24 24 27;
+  --border: 38 38 42;
+  --ink: 250 250 250;
+  --muted: 161 161 170;
+  --faint: 113 113 122;
+}
+.dark .invert-theme {
+  --canvas: 243 244 246;
+  --card: 250 251 252;
+  --surface: 233 235 238;
+  --border: 220 223 229;
+  --ink: 9 9 11;
+  --muted: 107 114 128;
+  --faint: 156 163 175;
 }
 
 @layer base {
   * {
-    @apply border-slate-200/60;
+    @apply border-border;
   }
 
   html {
-    scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
 
   body {
-    @apply bg-canvas text-ink font-sans antialiased;
+    @apply bg-background text-foreground font-sans antialiased;
     overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
+  /* Seleção invertida — crisp, monocromática. */
   ::selection {
-    background-color: rgba(69, 120, 255, 0.18);
+    background-color: rgb(var(--foreground));
+    color: rgb(var(--background));
   }
 
   /* Acessibilidade: respeita usuários que pediram menos movimento.
@@ -37,45 +82,45 @@
 }
 
 @layer components {
-  /* Cartão base do design system: cantos 36px, sombra ultraleve, borda invisível */
+  /* Bloco do design system: sem peso — apenas hairline cirúrgica de 1px. */
   .ds-card {
-    @apply rounded-card bg-card shadow-soft ring-1 ring-slate-200/60;
+    @apply border border-foreground/10 bg-transparent;
   }
 
-  /* Botão pill primário */
+  /* CTA primário monocromático — alto contraste invertido. */
   .ds-btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3
-      text-sm font-semibold text-white shadow-glow transition-all duration-300
-      hover:scale-[1.02] hover:shadow-float active:scale-[0.99];
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-foreground px-7 py-3.5
+      font-mono text-xs font-semibold uppercase tracking-[0.15em] text-background
+      transition-opacity duration-300 hover:opacity-80 active:opacity-70;
   }
 
-  /* Botão pill secundário (ghost) */
+  /* CTA secundário — hairline que se preenche no hover. */
   .ds-btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3
-      text-sm font-semibold text-ink ring-1 ring-slate-200 transition-all duration-300
-      hover:scale-[1.02] hover:bg-slate-50;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-foreground/25
+      bg-transparent px-7 py-3.5 font-mono text-xs font-semibold uppercase tracking-[0.15em]
+      text-foreground transition-colors duration-300 hover:bg-foreground hover:text-background;
   }
 
-  /* Pill de período / tab (Semanal · Mensal · Anual) */
+  /* Pill de tab / período. */
   .ds-pill {
-    @apply inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold
-      transition-colors duration-200;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-foreground/10 px-3 py-1
+      font-mono text-[11px] uppercase tracking-wider transition-colors duration-200;
   }
 
-  /* Eyebrow / kicker das seções */
+  /* Eyebrow / kicker em monoespaçada. */
   .ds-kicker {
-    @apply inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-[11px]
-      font-bold uppercase tracking-[0.18em] text-muted ring-1 ring-slate-200/70 backdrop-blur;
+    @apply inline-flex items-center gap-2 font-mono text-[11px] font-medium uppercase
+      tracking-[0.25em] text-foreground/50;
   }
 }
 
 @layer utilities {
-  /* Gradiente de texto da headline */
+  /* Mantido por compatibilidade — no monocromático é só foreground sólido. */
   .text-gradient {
-    @apply bg-gradient-to-br from-ink via-ink to-primary bg-clip-text text-transparent;
+    @apply text-foreground;
   }
 
-  /* Esconde scrollbar mantendo o scroll funcional (mockups internos) */
+  /* Esconde scrollbar mantendo o scroll funcional (mockups internos). */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
@@ -84,15 +129,15 @@
     scrollbar-width: none;
   }
 
-  /* Fundo de grade sutil (estilo Linear) */
+  /* Grade cirúrgica sutil — cor via token, adapta ao tema. */
   .bg-grid {
     background-image: linear-gradient(
         to right,
-        rgba(15, 23, 42, 0.035) 1px,
+        rgb(var(--grid-line) / 0.05) 1px,
         transparent 1px
       ),
-      linear-gradient(to bottom, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
-    background-size: 56px 56px;
+      linear-gradient(to bottom, rgb(var(--grid-line) / 0.05) 1px, transparent 1px);
+    background-size: 72px 72px;
   }
 
   .bg-grid-fade {
@@ -107,4 +152,27 @@
       transparent 100%
     );
   }
+
+  /* Numeração de capítulo [NN] — monoespaçada, discreta. */
+  .chapter-index {
+    @apply font-mono text-sm tracking-tight text-foreground/50;
+  }
+}
+
+/* ---- Lenis (rolagem suavizada) ---- */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }

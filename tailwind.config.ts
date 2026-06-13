@@ -1,10 +1,10 @@
 import type { Config } from "tailwindcss";
 
 /**
- * Design System do MedCare
- * Identidade premium / minimalista (estilo Linear · Vercel).
- * Tokens espelham o sistema real para que os mockups da landing page
- * sejam visualmente idênticos ao produto.
+ * Design System do MedCare — direção "grife" monocromática.
+ * Base preto-e-branco de alto contraste (tokens semânticos em CSS vars,
+ * reativos ao tema). As cores da marca (primary/teal/purple/amber) entram
+ * estritamente como pontos de luz focais.
  */
 const config: Config = {
   darkMode: "class",
@@ -16,10 +16,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Paleta principal
+        // Acentos focais da marca
         primary: {
           DEFAULT: "#4578FF",
-          soft: "#E8F0FF", // fundo dos stat cards azuis
+          soft: "#E8F0FF",
           foreground: "#FFFFFF",
         },
         teal: {
@@ -38,20 +38,30 @@ const config: Config = {
           DEFAULT: "#EF4444",
           soft: "#FEE2E2",
         },
-        // Superfícies
-        canvas: "#F8FAFC", // Background geral da aplicação
-        card: "#FFFFFF",
-        muted: "#94A3B8", // Textos secundários
-        ink: "#0F172A", // Texto principal (slate-900)
+        // Superfícies e texto — tokens semânticos reativos ao tema.
+        // Valores em CSS vars (globals.css): claro em :root, escuro em .dark,
+        // invertidos em .invert-theme (mockups do produto).
+        canvas: "rgb(var(--canvas) / <alpha-value>)",
+        card: "rgb(var(--card) / <alpha-value>)",
+        surface: "rgb(var(--surface) / <alpha-value>)",
+        border: "rgb(var(--border) / <alpha-value>)",
+        ink: "rgb(var(--ink) / <alpha-value>)",
+        muted: "rgb(var(--muted) / <alpha-value>)",
+        faint: "rgb(var(--faint) / <alpha-value>)",
+        // Aliases semânticos do redesign (base monocromática). Apontam direto
+        // para --canvas/--ink para re-resolverem por contexto (.invert-theme).
+        background: "rgb(var(--canvas) / <alpha-value>)",
+        foreground: "rgb(var(--ink) / <alpha-value>)",
+        // Banda escura premium — fixa em ambos os temas (não inverte).
+        deep: "#0B1120",
       },
       borderRadius: {
         card: "36px",
         panel: "40px",
       },
       boxShadow: {
-        // Sombras ultraleves do design system
-        soft: "0 4px 20px rgba(15, 23, 42, 0.02)",
-        float: "0 18px 50px -12px rgba(15, 23, 42, 0.12)",
+        soft: "0 4px 20px rgba(0, 0, 0, 0.04)",
+        float: "0 18px 50px -12px rgba(0, 0, 0, 0.25)",
         glow: "0 0 0 1px rgba(69, 120, 255, 0.08), 0 20px 60px -20px rgba(69, 120, 255, 0.35)",
       },
       fontFamily: {
@@ -65,6 +75,14 @@ const config: Config = {
           "Helvetica Neue",
           "Arial",
           "sans-serif",
+        ],
+        mono: [
+          "var(--font-mono)",
+          "ui-monospace",
+          "SFMono-Regular",
+          "Menlo",
+          "Consolas",
+          "monospace",
         ],
       },
       keyframes: {

@@ -16,15 +16,12 @@ interface Feature {
   accent: FeatureAccent;
 }
 
-/**
- * Mapa de acento → background suave do chip + cor do ícone.
- * Usa apenas os tokens de cor do contrato (sem hexes inventados).
- */
-const ACCENT: Record<FeatureAccent, { chip: string; color: string }> = {
-  primary: { chip: "bg-primary-soft", color: COLORS.primary },
-  teal: { chip: "bg-teal-soft", color: COLORS.teal },
-  purple: { chip: "bg-purple-soft", color: COLORS.purple },
-  amber: { chip: "bg-amber-soft", color: COLORS.amber },
+/** Acento focal por recurso — usado SÓ no ícone (ponto de luz). */
+const ACCENT: Record<FeatureAccent, string> = {
+  primary: COLORS.primary,
+  teal: COLORS.teal,
+  purple: COLORS.purple,
+  amber: COLORS.amber,
 };
 
 /** Os 6 recursos do produto, com acentos rotacionados. */
@@ -68,47 +65,35 @@ const FEATURES: Feature[] = [
 ];
 
 /**
- * Seção "Recursos" — grade responsiva (1/2/3 colunas) com os 6 diferenciais
- * da plataforma. Revelação escalonada dos cards no scroll via GSAP.
+ * Seção "Recursos" [01] — grade cirúrgica de linhas 1px (sem cards pesados).
+ * Cada célula traz seu índice [NN] em mono e o ícone no acento da marca como
+ * único ponto de luz. Revelação escalonada no scroll via GSAP (leak-free).
  */
 export function FeaturesGrid() {
   const root = useRef<HTMLElement>(null);
 
   useGSAP(
     () => {
-      const heading = ".features-heading";
       const cards = gsap.utils.toArray<HTMLElement>(".feature-card");
-
       const mm = gsap.matchMedia();
 
-      // Experiência completa: revelação com stagger no desktop.
       mm.add(
         "(min-width: 768px) and (prefers-reduced-motion: no-preference)",
         () => {
-          gsap.set([heading, cards], { opacity: 0, y: 32 });
-
-          gsap.to(heading, {
-            opacity: 1,
-            y: 0,
-            duration: 0.7,
-            scrollTrigger: { trigger: heading, start: "top 82%" },
-          });
-
+          gsap.set(cards, { opacity: 0, y: 32 });
           gsap.to(cards, {
             opacity: 1,
             y: 0,
             duration: 0.7,
-            stagger: 0.08,
-            scrollTrigger: { trigger: ".features-grid", start: "top 78%" },
+            stagger: 0.06,
+            scrollTrigger: { trigger: ".features-grid", start: "top 80%" },
           });
         },
       );
 
-      // Mobile / reduced-motion: revelação leve, sem stagger pesado, leak-free.
       mm.add("(max-width: 767px), (prefers-reduced-motion: reduce)", () => {
-        gsap.set([heading, cards], { opacity: 0, y: 16 });
-
-        gsap.to([heading, cards], {
+        gsap.set(cards, { opacity: 0, y: 16 });
+        gsap.to(cards, {
           opacity: 1,
           y: 0,
           duration: 0.5,
@@ -121,46 +106,45 @@ export function FeaturesGrid() {
   );
 
   return (
-    <section id="recursos" ref={root} className="py-24 sm:py-32">
+    <section id="recursos" ref={root} className="py-28 sm:py-40">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <SectionHeading
-          className="features-heading"
+          index="01"
           kicker="Recursos"
           kickerIcon="Sparkles"
-          title="Tudo o que sua clínica precisa, em um só lugar."
-          subtitle="Uma plataforma completa para gestão de clínicas sociais e comunitárias — do agendamento ao prontuário, com a equipe e os medicamentos sempre sob controle."
+          title={
+            <>
+              Tudo num <span className="text-primary">só lugar</span>
+            </>
+          }
+          subtitle="Uma plataforma completa para clínicas sociais e comunitárias — do agendamento ao prontuário, com a equipe e os medicamentos sempre sob controle."
         />
 
-        <div className="features-grid mt-14 grid grid-cols-1 gap-5 sm:mt-16 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
-          {FEATURES.map((feature) => {
-            const accent = ACCENT[feature.accent];
-            return (
-              <article
-                key={feature.title}
-                className="feature-card ds-card p-6 transition-transform duration-300 will-change-transform hover:scale-[1.02] sm:p-7"
-              >
-                <span
-                  className={[
-                    "grid h-12 w-12 place-items-center rounded-2xl",
-                    accent.chip,
-                  ].join(" ")}
-                >
-                  <Icon
-                    name={feature.icon}
-                    className="h-6 w-6"
-                    style={{ color: accent.color }}
-                  />
+        <div className="features-grid mt-16 grid grid-cols-1 border-l border-t border-foreground/10 sm:mt-20 sm:grid-cols-2 lg:grid-cols-3">
+          {FEATURES.map((feature, i) => (
+            <article
+              key={feature.title}
+              className="feature-card relative border-b border-r border-foreground/10 p-8 transition-colors duration-300 hover:bg-foreground/[0.02] sm:p-10"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-xs tracking-tight text-foreground/40">
+                  [{String(i + 1).padStart(2, "0")}]
                 </span>
+                <Icon
+                  name={feature.icon}
+                  className="h-5 w-5"
+                  style={{ color: ACCENT[feature.accent] }}
+                />
+              </div>
 
-                <h3 className="mt-5 text-lg font-bold tracking-tight text-ink">
-                  {feature.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-500">
-                  {feature.desc}
-                </p>
-              </article>
-            );
-          })}
+              <h3 className="mt-10 text-xl font-bold tracking-tight text-foreground">
+                {feature.title}
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-foreground/55">
+                {feature.desc}
+              </p>
+            </article>
+          ))}
         </div>
       </div>
     </section>
