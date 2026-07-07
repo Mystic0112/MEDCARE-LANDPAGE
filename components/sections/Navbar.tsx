@@ -10,7 +10,12 @@ const NAV_LINKS: { href: string; label: string }[] = [
   { href: "#prontuario", label: "Prontuário" },
   { href: "#acesso", label: "Acessos" },
   { href: "#seguranca", label: "Segurança" },
+  { href: "#faq", label: "FAQ" },
 ];
+
+/** Abre o modal de captação de leads (contrato global do LeadFormModal). */
+const openLeadModal = () =>
+  window.dispatchEvent(new CustomEvent("medcare:lead"));
 
 /**
  * Barra superior fixa — monocromática.
@@ -100,9 +105,13 @@ export function Navbar() {
             <Icon name={isDark ? "Sun" : "Moon"} className="h-5 w-5" />
           </button>
 
-          <a href="#acesso" className="ds-btn-primary hidden sm:inline-flex">
-            Acessar sistema
-          </a>
+          <button
+            type="button"
+            onClick={openLeadModal}
+            className="ds-btn-primary hidden sm:inline-flex"
+          >
+            Solicitar acesso
+          </button>
 
           {/* Hamburger — só no mobile */}
           <button
@@ -120,8 +129,10 @@ export function Navbar() {
       {/* Painel dropdown mobile — fecha ao clicar num link */}
       <div
         className={[
-          "overflow-hidden border-t border-foreground/10 bg-background/95 backdrop-blur transition-[max-height,opacity] duration-300 md:hidden",
-          menuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
+          "overflow-hidden border-t border-foreground/10 bg-background/95 backdrop-blur transition-[max-height,opacity,visibility] duration-300 md:hidden",
+          // `invisible` tira links/CTA fechados da tab order (a11y); a
+          // visibility transiciona discreta, só ao fim do collapse.
+          menuOpen ? "visible max-h-96 opacity-100" : "invisible max-h-0 opacity-0",
         ].join(" ")}
       >
         <div className="mx-auto flex max-w-6xl flex-col gap-1 px-5 py-4 sm:px-8">
@@ -135,13 +146,16 @@ export function Navbar() {
               {link.label}
             </a>
           ))}
-          <a
-            href="#acesso"
-            onClick={() => setMenuOpen(false)}
+          <button
+            type="button"
+            onClick={() => {
+              setMenuOpen(false);
+              openLeadModal();
+            }}
             className="ds-btn-primary mt-2 w-full"
           >
-            Acessar sistema
-          </a>
+            Solicitar acesso
+          </button>
         </div>
       </div>
     </header>

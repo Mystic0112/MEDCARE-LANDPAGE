@@ -127,7 +127,7 @@ export function FeaturesGrid() {
               className="feature-card relative border-b border-r border-foreground/10 p-8 transition-colors duration-300 hover:bg-foreground/[0.02] sm:p-10"
             >
               <div className="flex items-center justify-between">
-                <span className="font-mono text-xs tracking-tight text-foreground/40">
+                <span className="font-mono text-xs tracking-tight text-foreground/55">
                   [{String(i + 1).padStart(2, "0")}]
                 </span>
                 <Icon
@@ -140,7 +140,7 @@ export function FeaturesGrid() {
               <h3 className="mt-10 text-xl font-bold tracking-tight text-foreground">
                 {feature.title}
               </h3>
-              <p className="mt-3 text-sm leading-relaxed text-foreground/55">
+              <p className="mt-3 text-sm leading-relaxed text-foreground/65">
                 {feature.desc}
               </p>
             </article>

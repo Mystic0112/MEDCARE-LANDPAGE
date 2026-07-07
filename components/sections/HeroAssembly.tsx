@@ -186,10 +186,17 @@ export function HeroAssembly() {
               </p>
 
               <div className="mt-9 flex flex-wrap items-center gap-3">
-                <a href="#recursos" className="ds-btn-primary">
-                  Conhecer o sistema
+                {/* Abre o modal de captação de leads (LeadFormModal). */}
+                <button
+                  type="button"
+                  onClick={() =>
+                    window.dispatchEvent(new CustomEvent("medcare:lead"))
+                  }
+                  className="ds-btn-primary"
+                >
+                  Solicitar acesso
                   <Icon name="ArrowRight" className="h-4 w-4" />
-                </a>
+                </button>
                 <a href="#recursos" className="ds-btn-ghost">
                   Ver recursos
                 </a>
