@@ -84,12 +84,19 @@ export function FooterCta() {
           </p>
 
           <div className="cta-reveal mt-10 flex flex-wrap items-center gap-3">
-            <a href="#inicio" className="ds-btn-primary">
-              Acessar o MedCare
+            {/* Abre o modal de captação de leads (LeadFormModal). */}
+            <button
+              type="button"
+              onClick={() =>
+                window.dispatchEvent(new CustomEvent("medcare:lead"))
+              }
+              className="ds-btn-primary"
+            >
+              Solicitar acesso
               <Icon name="ArrowRight" className="h-4 w-4" />
-            </a>
-            <a href="#footer" className="ds-btn-ghost">
-              Falar com a equipe
+            </button>
+            <a href="#faq" className="ds-btn-ghost">
+              Perguntas frequentes
             </a>
           </div>
         </div>

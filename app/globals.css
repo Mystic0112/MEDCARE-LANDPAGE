@@ -79,6 +79,18 @@
       scroll-behavior: auto;
     }
   }
+
+  /* Acessibilidade: foco visível global coerente com a grife monocromática.
+     O anel usa --ink (muda com o tema) e o offset de 3px expõe o canvas entre
+     o elemento e o anel — visível até sobre o .ds-btn-primary (fundo ink). */
+  *:focus-visible {
+    outline: 2px solid rgb(var(--ink));
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  *:focus:not(:focus-visible) {
+    outline: none;
+  }
 }
 
 @layer components {
@@ -107,10 +119,10 @@
       font-mono text-[11px] uppercase tracking-wider transition-colors duration-200;
   }
 
-  /* Eyebrow / kicker em monoespaçada. */
+  /* Eyebrow / kicker em monoespaçada — /70 garante AA (≥4.5:1) em texto pequeno. */
   .ds-kicker {
     @apply inline-flex items-center gap-2 font-mono text-[11px] font-medium uppercase
-      tracking-[0.25em] text-foreground/50;
+      tracking-[0.25em] text-foreground/70;
   }
 }
 
@@ -153,9 +165,9 @@
     );
   }
 
-  /* Numeração de capítulo [NN] — monoespaçada, discreta. */
+  /* Numeração de capítulo [NN] — monoespaçada, discreta (/70 p/ contraste AA). */
   .chapter-index {
-    @apply font-mono text-sm tracking-tight text-foreground/50;
+    @apply font-mono text-sm tracking-tight text-foreground/70;
   }
 }
 

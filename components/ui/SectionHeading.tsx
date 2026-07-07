@@ -105,8 +105,8 @@ export function SectionHeading({
   );
 
   const fg = light ? "text-background" : "text-foreground";
-  const dim = light ? "text-background/50" : "text-foreground/50";
-  const sub = light ? "text-background/60" : "text-foreground/55";
+  const dim = light ? "text-background/70" : "text-foreground/70";
+  const sub = light ? "text-background/70" : "text-foreground/65";
 
   return (
     <div ref={root} className={["w-full", className].join(" ")}>
